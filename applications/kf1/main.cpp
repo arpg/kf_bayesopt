@@ -50,21 +50,23 @@ double vt = 0.005; 			// AWG measurement noise intensity: m^2
 
   // Use Van Loan method to find covariance of process noise
   // This will segfault, for sure.
-  Eigen::Matrix2d m;
-  m.row(0) << -a, gam*wt*gam.transpose();
-  m.block(1,0,2,2) << Eigen::Matrix2d::Zero(2);
-  m.col(2).tail(2) << a.transpose();
+  Eigen::Matrix4d m;
+  m.block(0,0,2,2) = -a;
+  m.block(0,2,2,2) = gam*wt*gam.transpose();
+  m.block(1,0,2,2) = Eigen::Matrix2d::Zero();
+
+  m.block(2,2,2,2) = a.transpose();
   m *= deltaT;
-  Eigen::Matrix2d m_exp(m.exp());
+  Eigen::Matrix4d m_exp(m.exp());
   Eigen::Matrix2d invFQblock;
   invFQblock << m_exp(0,0), m_exp(1,0), m_exp(0,1), m_exp(1,1) ;
   Eigen::Matrix2d qt = f*invFQblock;
 
   // Open-loop Control input
-  Eigen::Vector2d tv(Eigen::Vector2d::LinSpaced(deltaT, 0, 12));
+  Eigen::VectorXd tv(Eigen::VectorXd::LinSpaced(deltaT, 0, 12));
   tv *= 0.75;
-  Eigen::Vector2d u = tv.cos(); 	// acceleration input
-  tv /= 0.75;
+  Eigen::VectorXd u(tv.cos()); // acceleration input
+  tv *= 1/0.75;
 
 
   // Run chi-square tests on simulated filtering runs:
@@ -82,8 +84,8 @@ double vt = 0.005; 			// AWG measurement noise intensity: m^2
   double rkf = rt; // assume we can get this from sensor specs
 
   size_t max_iterations = 50;
-  Eigen::Matrix2d NEESsamps = Eigen::Matrix2d::Zero(max_iterations,tv.cols());
-  Eigen::Matrix2d NISsamps = Eigen::Matrix2d::Zero(max_iterations,tv.cols());
+  Eigen::MatrixXd NEESsamps = Eigen::MatrixXd::Zero(max_iterations,tv.cols());
+  Eigen::MatrixXd NISsamps = Eigen::MatrixXd::Zero(max_iterations,tv.cols());
 
   for( size_t ii = 0; ii < max_iterations; ii++ ) {
 
