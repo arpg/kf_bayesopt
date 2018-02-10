@@ -4,7 +4,7 @@
 
 #include <Eigen/Eigen>
 #include <eigen3/unsupported/Eigen/MatrixFunctions>
-#include <sophus/sophus.hpp>
+//#include <sophus/sophus.hpp>
 
 
 int main(int argc, char* argv[]) {
