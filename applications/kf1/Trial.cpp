@@ -20,7 +20,7 @@ void Trial::run()
   _simulator.initialize(x0, P0);
   _estimator.initialize(x0, P0);
 
-  double totalCHI2 = 0;
+  _averageNEES = 0;
 
   int maxIterations = 1000;
 
@@ -38,9 +38,9 @@ void Trial::run()
       // chi^2 estimate
       State xErr = _estimator.getXEst() - _simulator.getX();
       double chi2 = xErr.transpose() * _estimator.getPEst().llt().solve(xErr);
-      totalCHI2 += chi2;
+      _averageNEES += chi2;
       //cout << " " << chi2 << endl;
     }
 
-  cerr << totalCHI2 / maxIterations << endl;
+  _averageNEES /= maxIterations;
 }

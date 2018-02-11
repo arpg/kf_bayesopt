@@ -11,6 +11,8 @@ add_executable(testProcessModel testProcessModel.cpp)
 add_executable(testSimulator testSimulator.cpp Simulator.cpp) 
 
 add_executable(testTrial testTrial.cpp Trial.cpp Simulator.cpp KalmanFilter.cpp) 
+add_executable(testExperiment testExperiment.cpp  Experiment.cpp Trial.cpp
+Simulator.cpp KalmanFilter.cpp) 
 
 #if( BUILD_KF1 )
 #add_executable( kf1

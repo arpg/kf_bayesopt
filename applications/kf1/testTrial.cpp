@@ -14,6 +14,8 @@ int main(int argc, const char* argv[])
   Trial t(1, correctParameters, correctParameters);
 
   t.run();
+
+  cout << "Average NEES=" << t.getAverageNEES() << endl;
   
   return EX_OK;
 }

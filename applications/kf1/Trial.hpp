@@ -11,6 +11,11 @@ public:
   Trial(int trialNumber, const Parameters& simulatorParameters, const Parameters& estimatorParameters);
 
   void run();
+
+  double getAverageNEES() const
+  {
+    return _averageNEES;
+  }
   
 private:
 
@@ -21,6 +26,9 @@ private:
 
   // Estimator which does the magic
   KalmanFilter _estimator;
+
+  // Average NEES value
+  double _averageNEES;
 };
 
 #endif // __TRIAL_HPP__
