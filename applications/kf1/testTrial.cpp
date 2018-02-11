@@ -7,9 +7,11 @@ using namespace ::std;
 
 int main(int argc, const char* argv[])
 {
-  Parameters testParameters(1, 5, 0.1);
+  Parameters correctParameters(1, 1, 1);
+  Parameters wrongParameters(4, 4, 1);
 
-  Trial t(1, testParameters, testParameters);
+  //  Trial t(1, correctParameters, wrongParameters);
+  Trial t(1, correctParameters, correctParameters);
 
   t.run();
   
