@@ -1,8 +1,6 @@
 #ifndef __PARAMETERS_HPP__
 #define __PARAMETERS_HPP__
 
-#include "SystemModels.hpp"
-
 struct Parameters
 {
   double processNoise;
