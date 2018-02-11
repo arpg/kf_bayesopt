@@ -5,9 +5,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
 
 option(BUILD_KF1 "Build the Kalman Filter application." ON)
 
-if( BUILD_KF1 )
-add_executable( kf1 main.cpp )
+add_executable(testProcessModel testProcessModel.cpp) 
+
+#
+add_executable(testSimulator testSimulator.cpp Simulator.cpp) 
+
+add_executable(testTrial testTrial.cpp Trial.cpp Simulator.cpp KalmanFilter.cpp) 
+
+#if( BUILD_KF1 )
+#add_executable( kf1
+#Experiment.cpp
+##ProcessModel.cpp
+#Trial.cpp
+#main.cpp )
 #   target_link_libraries(kf2
 #     ${PROTOBUF_LIBRARY}
 #      )
-endif( BUILD_KF1 )
+#endif( BUILD_KF1 )
