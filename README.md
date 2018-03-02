@@ -11,6 +11,6 @@
   I change it to be the same as Matlab code ("Pkp1_plus" is _PEst in C++) 
   _PEst = X * _PPred;
   
-6:In Matlab code it does average for a whole NEESsamps matrix(10 by 201)
+6:In Matlab code it does average for a whole NEESsamps matrix(10 by 201). Original code will run 2000 times for one QPSD, in the new code(trail.cpp) I let it run 201 iterations and restart it 10 times(Nsimruns:10 in Matlab code)
 
 7:No NIS yet, add later
