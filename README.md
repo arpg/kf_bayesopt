@@ -1,3 +1,5 @@
+Download the zip file "cmake ." and then "make"
+
 1:please don't change deltaT for now because the G matrix(check matlab code) will change along with delta T, in the code I just write G = [0.005,0.1]' for deltaT = 0.1
 
 2:in prediction part, I add the input G*u[];
