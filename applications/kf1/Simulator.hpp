@@ -12,7 +12,7 @@ public:
 
   void initialize(const State& x0, const StateCovariance& P0);
 
-  void step();
+  void step(int count);
 
   const State& getX() const
   {

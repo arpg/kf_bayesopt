@@ -1,6 +1,8 @@
 #ifndef __SYSTEM_MODELS_HPP__
 #define __SYSTEM_MODELS_HPP__
 
+#include <cmath>
+#include <vector>
 #include "eigenmvn.h"
 #include "continuousToDiscrete.hpp"
 
@@ -30,7 +32,19 @@ public:
     
     Fc(0, 1) = 1;
     Qc(1, 1) = processNoise;
-    
+    //
+    G(0,0)   = 0.005;//just for test dt =0.1
+    G(1,0)   = 0.1;
+      
+    double j = 0; 
+
+    for(int i = 0;i<2000;i++)
+      {
+        u.push_back(2*cos(0.75*j));
+        j += deltaT; 
+        //if(i<10) {std::cout<<"j is "<<j<<std::endl;std::cout<<"u is "<<u[i]<<std::endl;}
+      }
+    //
     continuousToDiscrete(_Fd, _Qd, Fc, Qc, deltaT);
 
     if (_sampleProcessNoise == true)
@@ -40,10 +54,11 @@ public:
       }
   }
 
-  State predict(const State& xEst)
+  State predict(const State& xEst, int count)
   {
-    State xPred = _Fd * xEst;
-    
+    State xPred = _Fd * xEst+G*u[count];
+    //if(count<10) { std::cout<<xPred<<std::endl; }//std::cout<<"u is "<<u[count]<<std::endl;
+    //std::cout<<"count is "<<count<<std::endl;
     if (_sampleProcessNoise == true)
       {
 	xPred += _noiseSampler.samples(1);
@@ -67,6 +82,9 @@ private:
 
   Eigen::Matrix2d _Fd;
   Eigen::Matrix2d _Qd;
+  Eigen::Matrix<double,2,1> G; 
+  std::vector<double> u;
+  std::vector<double> tvec;
 
   bool _sampleProcessNoise;
   

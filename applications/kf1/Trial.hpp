@@ -4,6 +4,7 @@
 #include "Simulator.hpp"
 #include "KalmanFilter.hpp"
 
+
 class Trial
 {
 public:
@@ -20,6 +21,10 @@ public:
 private:
 
   int _trialNumber;
+
+  int Nsimruns = 10;
+  
+  int maxIterations=201;
   
   // Simulator which generates the sequence
   Simulator _simulator;
@@ -29,6 +34,11 @@ private:
 
   // Average NEES value
   double _averageNEES;
+
+  double AllNEES = 0 ;
+  double rowNEES = 0 ;
+  //vector<vector<double> > AllNEES;
+  //vector<double> OneNEES
 };
 
 #endif // __TRIAL_HPP__

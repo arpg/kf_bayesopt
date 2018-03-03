@@ -13,8 +13,8 @@ void Simulator::initialize(const State& x0, const StateCovariance& P0)
   _x = initialConditionSampler.samples(1);
 }
 
-void Simulator::step()
+void Simulator::step(int count)
 {
-  _x = _processModel.predict(_x);
+  _x = _processModel.predict(_x,count);
   _z = _observationModel.predict(_x);
 }
