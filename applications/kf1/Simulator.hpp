@@ -3,6 +3,7 @@
 
 #include "SystemModels.hpp"
 #include "Parameters.hpp"
+#include <chrono>
 
 class Simulator
 {

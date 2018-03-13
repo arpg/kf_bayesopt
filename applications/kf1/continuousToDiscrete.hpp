@@ -25,9 +25,10 @@ void continuousToDiscrete(MatrixType& Fd, MatrixType& Qd,
   //Eigen::MatrixExponential<DoubleSizedMatrixType> me(bigA);
   //me.compute(bigB);
   bigB = bigA.exp();
-
+  
   // Extract the discrete time components
   Fd = bigB.template bottomRightCorner<NX,NX>().transpose();
+  //std::cout<<"botthm right transpose is \n"<<Fd<<std::endl;
   Qd = Fd * bigB.template topRightCorner<NX,NX>();
 }
 

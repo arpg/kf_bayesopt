@@ -52,6 +52,7 @@ public:
 	_noiseSampler.setMean(State::Zero());
 	_noiseSampler.setCovar(_Qd);
       }
+   //std::cout<<"_Qd is \n"<<_Qd<<std::endl;
   }
 
   State predict(const State& xEst, int count)
@@ -61,7 +62,16 @@ public:
     //std::cout<<"count is "<<count<<std::endl;
     if (_sampleProcessNoise == true)
       {
-	xPred += _noiseSampler.samples(1);
+         State noi = _noiseSampler.samples(1);
+         if(count<3)
+         {
+            //std::cout<<"xPred is "<<xPred<<std::endl;
+            //std::cout<<"_Fd is \n"<<_Fd<<std::endl;
+            //std::cout<<"G is \n"<<G<<std::endl;
+            //std::cout<<"u is \n"<<u[count]<<std::endl;
+            //std::cout<<"noise is \n"<<noi<<std::endl;
+         }
+	xPred += noi;
       }
    
     return xPred;

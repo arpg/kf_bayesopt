@@ -17,12 +17,18 @@ public:
   {
     return _averageNEES;
   }
+
+  double getAverageNIS() const
+  {
+    return _averageNIS;
+  }
+  
   
 private:
 
   int _trialNumber;
 
-  int Nsimruns = 10;
+  int Nsimruns = 20;
   
   int maxIterations=201;
   
@@ -34,11 +40,14 @@ private:
 
   // Average NEES value
   double _averageNEES;
+  double _averageNIS;
 
   double AllNEES = 0 ;
   double rowNEES = 0 ;
-  //vector<vector<double> > AllNEES;
-  //vector<double> OneNEES
+  double rowNIS  = 0 ;
+  double AllNIS  = 0 ;
+  //std::vector<std::vector<double> > AllNEES;
+  //std::vector<double> OneNEES
 };
 
 #endif // __TRIAL_HPP__
