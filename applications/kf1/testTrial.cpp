@@ -14,7 +14,7 @@ int main(int argc, const char* argv[])
   {
     q+=0.04015;//0.04015
     Parameters correctParameters(1, 1, 0.1);//(1e-8, 1e-8, 0.1)
-    Parameters wrongParameters(q,0.95, 0.1);//process noise, observation noise, deltaT//(1e-8, 1e-8, 0.1)
+    Parameters wrongParameters(q,1, 0.1);//process noise, observation noise, deltaT//(1e-8, 1e-8, 0.1)
 
   //  Trial t(1, correctParameters, wrongParameters);
    Trial t(1, correctParameters, wrongParameters);
