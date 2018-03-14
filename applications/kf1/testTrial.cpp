@@ -24,7 +24,7 @@ int main(int argc, const char* argv[])
    double J_NEES = sqrt((log(t.getAverageNEES()/2))*(log(t.getAverageNEES()/2)));
    double J_NIS  = sqrt(log(t.getAverageNIS())*log(t.getAverageNIS()));
 
-   //cout << "Average NEES after log =" << J_NEES<<","<<" QPSD is "<<q<< endl;
+   cout << "Average NEES after log =" << J_NEES<<","<<" QPSD is "<<q<< endl;
    cout << "Average NIS after log =" << J_NIS<<","<<" QPSD is "<<q<< endl;
 
    wr<<q<<","<<J_NEES<<","<<J_NIS<<endl;
