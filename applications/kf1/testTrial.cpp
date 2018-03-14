@@ -9,7 +9,7 @@ using namespace ::std;
 int main(int argc, const char* argv[])
 {
   double q = 0.01; //q=0.01
-  ofstream wr("NEES_QPSD.csv",ios::out|ios::app);
+  ofstream wr("QPSD_NEES_NIS.csv",ios::out|ios::app);
   for(int i = 0; i<100;i++)
   {
     q+=0.04015;//0.04015
