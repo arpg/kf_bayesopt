@@ -42,4 +42,4 @@ catkin_make
 ```
 ## Run the code
 The main structure can be seen from the following figure
-![alt text](https://github.com/arpg/ekf_bayesopt.git/Nodes.png)
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/Nodes.png)
