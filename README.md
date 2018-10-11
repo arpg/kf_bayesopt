@@ -34,7 +34,7 @@ This is ode integration lib using C++. Ode45 is used in matlab code, this lib ca
 ```
 git clone --single-branch -b master https://github.com/arpg/ekf_bayesopt.git
 cp ekf_bayesopt/bayesopt_ros ~/catkin_ws/src
-cd ..
+cd ~/catkin_ws
 catkin_make
 ```
 
