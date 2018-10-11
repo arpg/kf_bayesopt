@@ -42,3 +42,4 @@ catkin_make
 ```
 ## Run the code
 The main structure can be seen from the following figure
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
