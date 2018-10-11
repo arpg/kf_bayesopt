@@ -19,7 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
-find_package(OpenCV 2.4 REQUIRED)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 FIND_LIBRARY(NLOPT nlopt)
@@ -152,10 +151,10 @@ include_directories(
 # )
 
 add_executable(skyCrane_bayesopt src/skyCrane_bayesopt.cpp src/readPara_bayes.cpp src/readPara_vehicle.cpp)
-target_link_libraries(skyCrane_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} ${OpenCV_LIBS} Eigen3::Eigen)
+target_link_libraries(skyCrane_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} Eigen3::Eigen)
 
 add_executable(skyCrane_EKF src/runTrialNode.cpp src/EKF.cpp src/vehicleSimulator.cpp src/vehicleModel.cpp src/readPara_vehicle.cpp src/trial.cpp)
-target_link_libraries(skyCrane_EKF ${catkin_LIBRARIES} ${NLOPT} ${OpenCV_LIBS} Eigen3::Eigen)
+target_link_libraries(skyCrane_EKF ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen)
 
 
 ## Add cmake target dependencies of the library
