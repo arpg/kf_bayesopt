@@ -41,3 +41,4 @@ cd ~/catkin_ws
 catkin_make
 ```
 ## Run the code
+The main structure can be seen from the following figure
