@@ -29,7 +29,9 @@ https://launchpad.net/ubuntu/+source/eigen3
 ```
 git clone git://github.com/headmyshoulder/odeint-v2
 ```
-This is ode integration lib using C++. Ode45 is used in matlab code, this lib can work the same as it. Just download it, you don't need build it. Details can be seen http://headmyshoulder.github.io/odeint-v2/index.html
+This is ode integration lib using C++. Ode45 is used in matlab code, this lib can work the same as it. Just download it, you don't need build it. Details can be seen http://headmyshoulder.github.io/odeint-v2/index.html  
+
+Delete the old ekf_bayesopt folder first.
 
 ```
 git clone --single-branch -b master https://github.com/arpg/ekf_bayesopt.git
