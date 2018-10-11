@@ -20,3 +20,21 @@ make
 sudo make install
 ```
 Deatails can be seen at https://rmcantin.bitbucket.io/html/install.html
+
+### Install ROS
+recomment ROS kinetic version, please see http://wiki.ros.org/kinetic/Installation/Ubuntu 
+### Install Eigen3
+https://launchpad.net/ubuntu/+source/eigen3
+### Install the bayesopt_ros package
+```
+git clone git://github.com/headmyshoulder/odeint-v2
+```
+This is ode integration lib using C++. Ode45 is used in matlab code, this lib can work the same as it. Just download it, you don't need build it. Details can be seen http://headmyshoulder.github.io/odeint-v2/index.html
+
+```
+git clone --single-branch -b master https://github.com/arpg/ekf_bayesopt.git
+cp ekf_bayesopt/bayesopt_ros ~/catkin_ws/src
+cd ..
+catkin_make
+```
+
