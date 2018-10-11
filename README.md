@@ -11,12 +11,12 @@ This system is also build on ROS so you also need install ROS.
 ## Install
 ### Install bayesian optimization
 bayesian optimization is from its official lib.
-'''
+```
 sudo apt-get install libboost-dev python-dev python-numpy cmake cmake-curses-gui g++ cython octave-headers freeglut3-dev
 git clone --single-branch -b bayesopt https://github.com/arpg/ekf_bayesopt.git
 cd ekf_bayesopt
 cmake .
 make
 sudo make install
-'''
+```
 Deatails can be seen at https://rmcantin.bitbucket.io/html/install.html
