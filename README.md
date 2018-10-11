@@ -6,7 +6,7 @@ This package is written based on Prof.Nisar's matlab code for skyCrane machine a
 This package will run bayesian opimization to optimize skyCrane's process noise or measurement or all of them.
 EKF is implemented and the cost to bayesian optimization is J_NEES or J_NIS.
 
-This system is also build on ROS so you also need install ROS.
+This system is also build on ROS so you also need install ROS. With the help of ROS, I can communicate between bayesian optimization lib and skyCrane lib. At the same time, all the parameters of bayesian optimization and skyCrane can be modified in the yaml file
 
 ## Install
 ### Install bayesian optimization
