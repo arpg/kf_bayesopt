@@ -19,6 +19,7 @@ bayesian optimization is from its official lib.
 sudo apt-get install libboost-dev python-dev python-numpy cmake cmake-curses-gui g++ cython octave-headers freeglut3-dev
 git clone --single-branch -b bayesopt https://github.com/arpg/ekf_bayesopt.git
 cp ekf_bayesopt/bayesopt ~
+rm -r -f ekf_bayesopt
 cd ~/bayesopt
 cmake .
 make
@@ -36,7 +37,7 @@ git clone git://github.com/headmyshoulder/odeint-v2
 ```
 This is ode integration lib using C++. Ode45 is used in matlab code, this lib can work the same as it. Just download it, you don't need build it. Details can be seen http://headmyshoulder.github.io/odeint-v2/index.html  
 
-Delete the old ekf_bayesopt folder first.
+Delete the old ekf_bayesopt folder first. You should have already done it at the `Install bayesian optimization` part
 
 ```
 git clone --single-branch -b master https://github.com/arpg/ekf_bayesopt.git
