@@ -1,6 +1,6 @@
 # ekf_bayesopt
 Kalman Filter tuning using Bayesian Optimization
-
+If you meet any problems on installing or running the code please let me know!
 ## Introduction
 This package is written based on Prof.Nisar's matlab code for skyCrane machine and Prof.Simon's KF code.
 This package will run bayesian opimization to optimize skyCrane's process noise or measurement or all of them.
