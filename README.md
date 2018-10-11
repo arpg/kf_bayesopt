@@ -14,7 +14,7 @@ bayesian optimization is from its official lib.
 ```
 sudo apt-get install libboost-dev python-dev python-numpy cmake cmake-curses-gui g++ cython octave-headers freeglut3-dev
 git clone --single-branch -b bayesopt https://github.com/arpg/ekf_bayesopt.git
-cd ekf_bayesopt
+cd ekf_bayesopt/bayesopt
 cmake .
 make
 sudo make install
