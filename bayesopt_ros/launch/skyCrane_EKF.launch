@@ -1,6 +1,0 @@
-<launch>
-    <param name="name" value="skyCrane_EKF"/>
-    <rosparam file="$(find bayesopt_ros)/config/vehicleParams.yaml" command="load" />
-    <node name="skyCrane_EKF" pkg = "bayesopt_ros" type = "skyCrane_EKF" output="screen">
-    </node>
-</launch>
