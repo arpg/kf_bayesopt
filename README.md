@@ -46,13 +46,91 @@ cd ~/catkin_ws
 catkin_make
 ```
 ## Run the code
+**Run bayesian optimization for skyCrane problem**
 open one terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch bayesopt_ros skyCrane_EKF.launch 
+roslaunch skycrane_bayesopt skyCrane_EKF.launch 
 ```
 open another terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch bayesopt_ros skyCrane_bayesopt.launch 
+roslaunch skycrane_bayesopt skyCrane_bayesopt.launch 
+```
+In 1D or 2D case, if you want to visualize the process, open another terminal
+
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotSurrogateAcquisition.py
+```
+
+**Test program**
+1:test controller and check the state output
+open one terminal 
+```
+roscore
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotStateHis.py
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+roslaunch skycrane_bayesopt skyCrane_testController.launch
+```
+
+2: test model(simulator, estimator and controller). You need modify the specific estimator process noise you want to test in src/testProgram/testModel.cpp. Three are three lines
+```
+rV.pnoise[0] = 0.01;//0.01;//0.0001;
+rV.pnoise[1] = 0.01;//0.01;//0.0001;
+rV.pnoise[2] = 0.01;//0.01;//0.0001;
+```
+Then you need use catkin_make to recompile. After you sepcify the estimator process noise you want to test
+
+```
+roscore
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotStateHis.py
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+roslaunch skycrane_bayesopt skyCrane_testModel.launch
+```
+3: test bayesopt and plot 1D 2D situation.
+for 1D, use bayesopt lib's own example to visulize the surrogate model and acuisition fucntion. Will find the minimum of this function `(x-0.3)*(x-0.3) + sin(20*x)*0.2;`
+open one terminal
+```
+roscore
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotSurrogateAcquisition.py
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plot1DsurrogateModel
+```
+
+For2D visualization, we use example function `sqr(y-(5.1/(4*pi*pi))*sqr(x)+5*x/pi-6)+10*(1-1/(8*pi))*cos(x)+10;`
+open one terminal
+```
+roscore
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotSurrogateAcquisition.py
+```
+open another terminal
+```
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plot2DsurrogateModel
 ```
