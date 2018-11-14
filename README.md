@@ -63,6 +63,11 @@ In 1D or 2D case, if you want to visualize the process, open another terminal
 source ~/catkin_ws/devel/setup.bash
 rosrun skycrane_bayesopt plotSurrogateAcquisition.py
 ```
+1D in fact means we search the 3D process noise diagonally. You need first modify some parameters in the yaml file.<br/>
+in `config/vehicleParams.yaml`, you need change `optimizationChoice` value to `processNoise1D`. Then in `bayesParams` you need change `opt_dim` value to 1, `lower bound` and `upper cound` has to be 1 dimensional also.<br/>
+1D case we'll optimize the first two elements of process noise.<br/>
+All the process is similar to 1D case, for example, change `optimizationChoice` value to `processNoise2D`
+
 
 **Test program** <br/>
 1:test controller and check the state output
