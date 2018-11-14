@@ -103,7 +103,7 @@ source ~/catkin_ws/devel/setup.bash
 roslaunch skycrane_bayesopt skyCrane_testModel.launch
 ```
 3: test bayesopt and plot 1D 2D situation.
-for 1D, use bayesopt lib's own example to visulize the surrogate model and acuisition fucntion. Will find the minimum of this function `(x-0.3)*(x-0.3) + sin(20*x)*0.2;`
+for 1D, use bayesopt lib's own example to visulize the surrogate model and acuisition fucntion. Will find the minimum of this function `(x-0.3)*(x-0.3) + sin(20*x)*0.2;` <br/>
 open one terminal
 ```
 roscore
@@ -119,7 +119,7 @@ source ~/catkin_ws/devel/setup.bash
 rosrun skycrane_bayesopt plot1DsurrogateModel
 ```
 
-For2D visualization, we use example function `sqr(y-(5.1/(4*pi*pi))*sqr(x)+5*x/pi-6)+10*(1-1/(8*pi))*cos(x)+10;`
+For2D visualization, we use example function `sqr(y-(5.1/(4*pi*pi))*sqr(x)+5*x/pi-6)+10*(1-1/(8*pi))*cos(x)+10;`<br/>
 open one terminal
 ```
 roscore
@@ -134,3 +134,21 @@ open another terminal
 source ~/catkin_ws/devel/setup.bash
 rosrun skycrane_bayesopt plot2DsurrogateModel
 ```
+4: plot 1D or 3D diagonal noise change vs cost. Which means if you want to check if the bayesopt works correctly, sometimes you need plot what the real function looks like.<br/>
+similar as testModel example. You need go to src/testProgram/plotCost1D.cpp to modify where you want to start plot, how many points you want to plot, what's the interval between the plot and then save and `catkin_make`. <br/>
+Then open one terminal
+```
+roscore
+```
+open another terminal
+```
+``
+source ~/catkin_ws/devel/setup.bash
+rosrun skycrane_bayesopt plotCost1D.py
+```
+open other terminal 
+```
+source ~/catkin_ws/devel/setup.bash
+roslaunch skycrane_bayesopt skyCrane_plotCost1D.launch
+```
+Similar if you want to plot 2D process noise vs cost
