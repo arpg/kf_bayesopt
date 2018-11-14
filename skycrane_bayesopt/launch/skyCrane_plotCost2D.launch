@@ -1,0 +1,6 @@
+<launch>
+    <param name="name" value="skyCrane_plotCost2D"/>
+    <rosparam file="$(find skycrane_bayesopt)/config/vehicleParams.yaml" command="load" />
+    <node name="skyCrane_plotCost2D" pkg = "skycrane_bayesopt" type = "skyCrane_plotCost2D" output="screen">
+    </node>
+</launch>

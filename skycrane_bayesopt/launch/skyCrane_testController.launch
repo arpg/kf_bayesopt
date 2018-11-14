@@ -1,0 +1,6 @@
+<launch>
+    <param name="name" value="skyCrane_testController"/>
+    <rosparam file="$(find skycrane_bayesopt)/config/vehicleParams.yaml" command="load" />
+    <node name="skyCrane_testController" pkg = "skycrane_bayesopt" type = "skyCrane_testController" output="screen">
+    </node>
+</launch>
