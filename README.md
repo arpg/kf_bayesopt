@@ -46,7 +46,7 @@ cd ~/catkin_ws
 catkin_make
 ```
 ## Run the code
-**Run bayesian optimization for skyCrane problem** \1
+**Run bayesian optimization for skyCrane problem** <br/>
 open one terminal
 ```
 source ~/catkin_ws/devel/setup.bash
@@ -64,7 +64,7 @@ source ~/catkin_ws/devel/setup.bash
 rosrun skycrane_bayesopt plotSurrogateAcquisition.py
 ```
 
-**Test program** \1
+**Test program** <br/>
 1:test controller and check the state output
 open one terminal 
 ```
