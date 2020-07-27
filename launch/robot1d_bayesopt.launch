@@ -1,0 +1,6 @@
+<launch>
+    <param name="name" value="robot1d_bayesopt"/>
+    <rosparam file="$(find robot_kf_bayesopt)/config/bayesParams.yaml" command="load" />  
+    <node name="robot1d_bayesopt" pkg = "robot_kf_bayesopt" type = "robot1d_bayesopt" output="screen">
+    </node>
+</launch>

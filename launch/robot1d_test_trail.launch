@@ -1,0 +1,6 @@
+<launch>
+    <param name="name" value="test_trial"/>
+    <rosparam file="$(find robot_kf_bayesopt)/config/vehicleParams.yaml" command="load" />
+    <node name="test_trial" pkg = "robot_kf_bayesopt" type = "test_trial" output="screen">
+    </node>
+</launch>

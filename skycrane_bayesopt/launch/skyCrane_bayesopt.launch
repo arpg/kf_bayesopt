@@ -1,6 +1,0 @@
-<launch>
-    <param name="name" value="skyCrane_bayesopt"/>
-    <rosparam file="$(find skycrane_bayesopt)/config/bayesParams.yaml" command="load" />  
-    <node name="skyCrane_bayesopt" pkg = "skycrane_bayesopt" type = "skyCrane_bayesopt" output="screen">
-    </node>
-</launch>

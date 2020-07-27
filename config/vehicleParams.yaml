@@ -1,0 +1,24 @@
+CPUcoreNumber: 10
+
+#state and observation
+stateDOF: 2
+observationDOF: 1
+
+#time
+t_start: 0.0 #start of the simulation time
+t_end: 20.1 #end of the simulation time
+dt: 0.1
+
+#initial state
+xi0: 0.0
+xidot0: 0.0
+
+Nsimruns: 200
+
+pnoise: [1.0]
+onoise: [1.0]
+
+#optimize "processNoise" or "observationNoise" , "all"
+optimizationChoice: all
+
+costChoice: JNIS
