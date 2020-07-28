@@ -22,25 +22,20 @@ To modify the parameters, please go to the `config`. There are two yaml files `b
 
 ## Dependencies
 ### Install bayesian optimization
-bayesian optimization is from its official lib.
+bayesian optimization is from my github https://github.com/zhaozhongch/bayesopt. (The official bayesopt will also work but no API for python and matlab plot)
 ```
 sudo apt-get install libboost-dev python-dev python-numpy cmake cmake-curses-gui g++ cython octave-headers freeglut3-dev
-git clone --single-branch -b bayesopt https://github.com/arpg/ekf_bayesopt.git
-cp ekf_bayesopt/bayesopt ~
-rm -r -f ekf_bayesopt
-cd ~/bayesopt
-cmake .
+git clone https://github.com/zhaozhongch/bayesopt.git
+cd bayesopt
+mkdir build
+cd build
+cmake ..
 make
 sudo make install
 ```
 Deatails can be seen at https://rmcantin.bitbucket.io/html/install.html
 
-If you want to see the real-time surrogate function and acquisition function model, you can download my version (just add some plot API)
-```
-To be added
-```
-
-### ROS kinect or melodic
+### ROS indigo or kinect or melodic
 ### Eigen3
 ### Install the bayesopt_ros package
 
