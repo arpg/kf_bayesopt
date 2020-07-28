@@ -82,3 +82,6 @@ The parameters of the simulation robot are pretty strightforward if you read the
 One thing you need to notice is that the `upper bound` and `lower bound`'s dimension in `bayesParams.yaml` must agree with the `optimizationChoice` parameter in `vehicleParams.yaml`.  
 For example, the processnoise is 1d, if you choose `optimizationChoice` to be `processNoise` then the lower and upper bound should be just 1 dimension; if you choose `optimizationChoice` to be `all` then the lower and upper bound should be just 2 dimension.  
 `CPUcoreNumber` decides how many threads you wan to run parallely, which you can choose according to the core number of your computer.
+
+## Some tricks
+We found that the sometimes the bayesopt cannot find the global minimum because the local minimum points's JNIS is so close to the global one or even smaller because of the noise. To solve this, we found the local minimum found by `0.1` dt setting doesn't work for some other dt like `1` so in the `trail_node.cpp` you can see we add also both use `dt=1` and `dt=0.1` to run the cost function and git JNIS/JNEES and simply pick the larger cost. Only the global minimum work for all dt.  
