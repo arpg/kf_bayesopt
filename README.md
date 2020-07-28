@@ -1,5 +1,15 @@
 # kf_bayesopt
-Kalman Filter tuning example using Bayesian Optimization
+Kalman Filter tuning example using Bayesian Optimization. If you use the relates code, please consider citing
+```
+@inproceedings{chen2018weak,
+  title={Weak in the NEES?: Auto-tuning Kalman filters with Bayesian optimization},
+  author={Chen, Zhaozhong and Heckman, Christoffer and Julier, Simon and Ahmed, Nisar},
+  booktitle={2018 21st International Conference on Information Fusion (FUSION)},
+  pages={1072--1079},
+  year={2018},
+  organization={IEEE}
+}
+```
 ## Introduction
 This package simulates 1D robot with linear kinematics model as decribed in our paper `<Weak in the NEES?: Auto-tuning Kalman Filters
 with Bayesian Optimization>`
@@ -55,103 +65,25 @@ open another terminal
 source ~/catkin_ws/devel/setup.bash
 roslaunch robot_kf_bayesopt robot1d_bayesopt.launch
 ```
-In 1D or 2D case, if you download the bayesopt from my github, you can visualize the process in real time, open another terminal
+In 1D or 2D case, **if you download the bayesopt from my github**, you can visualize the process in real time, open another terminal
 
 ```
 source ~/catkin_ws/devel/setup.bash
 rosrun robot_kf_bayesopt plot_surrogate_acquisition.py
 ```
 For 1D optimization, you'll see something like this
-![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/1d_opt_example.png).
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/1d_opt_example.png)
 In the example image, the upper one is surrogate model with mean, 95% upper bound, 95% lower bound and sample points. The lower one is acquisition function. you can see the legend to know the detail.  
 For 2D optimization, you'll see something like this 
-![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/2d_opt_example.png).
-In this example image, you'll see 2d surrogate model and 2d acquisition function. No upper and lower bound is shown because the bound will cover the mean so I decide not adding them.
-**Test program** <br/>
-1:test controller and check the state output
-open one terminal 
-```
-roscore
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotStateHis.py
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-roslaunch skycrane_bayesopt skyCrane_testController.launch
-```
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/2d_opt_example.png)
+In this example image, you'll see 2d surrogate model and 2d acquisition function. No upper and lower bound is shown because the bound will cover the mean so I decide not to add them.  
+What's more, we also provide matlab script to plot the bayesopt for 1D and 2D problem. For 1D and 2D optimization, every time the optimization is finished, you should be able to see some csv files in the bayesopt/bayesplot folder. With the matlab script, specify the location of the csv folder, output image folder and initial sample number, for 1D/2D optimization, you can get a plot like the following
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/1d_matlab_plot.png)
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/2d_matlab_plot.png)
 
-2: test model(simulator, estimator and controller). You need modify the specific estimator process noise you want to test in src/testProgram/testModel.cpp. Three are three lines
-```
-rV.pnoise[0] = 0.01;//0.01;//0.0001;
-rV.pnoise[1] = 0.01;//0.01;//0.0001;
-rV.pnoise[2] = 0.01;//0.01;//0.0001;
-```
-Then you need use catkin_make to recompile. After you sepcify the estimator process noise you want to test
-
-```
-roscore
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotStateHis.py
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-roslaunch skycrane_bayesopt skyCrane_testModel.launch
-```
-3: test bayesopt and plot 1D 2D situation.
-for 1D, use bayesopt lib's own example to visulize the surrogate model and acuisition fucntion. Will find the minimum of this function `(x-0.3)*(x-0.3) + sin(20*x)*0.2;` <br/>
-open one terminal
-```
-roscore
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotSurrogateAcquisition.py
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plot1DsurrogateModel
-```
-
-For2D visualization, we use example function `sqr(y-(5.1/(4*pi*pi))*sqr(x)+5*x/pi-6)+10*(1-1/(8*pi))*cos(x)+10;`<br/>
-open one terminal
-```
-roscore
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotSurrogateAcquisition.py
-```
-open another terminal
-```
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plot2DsurrogateModel
-```
-4: plot 1D or 3D diagonal noise change vs cost. Which means if you want to check if the bayesopt works correctly, sometimes you need plot what the real function looks like.<br/>
-similar as testModel example. You need go to src/testProgram/plotCost1D.cpp to modify where you want to start plot, how many points you want to plot, what's the interval between the plot and then save and `catkin_make`. <br/>
-Then open one terminal
-```
-roscore
-```
-open another terminal
-```
-``
-source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotCost1D.py
-```
-open other terminal 
-```
-source ~/catkin_ws/devel/setup.bash
-roslaunch skycrane_bayesopt skyCrane_plotCost1D.launch
-```
-Similar if you want to plot 2D process noise vs cost
+## Parameters
+The parameter of bayesopt should be considered from the bayesopt official website https://github.com/rmcantin/bayesopt. You can specify those parameters in `bayesParams.yaml`.
+The parameters of the simulation robot are pretty strightforward if you read the paper and the parameters are stored in `vehicleParams.yaml`  
+One thing you need to notice is that the `upper bound` and `lower bound`'s dimension in `bayesParams.yaml` must agree with the `optimizationChoice` parameter in `vehicleParams.yaml`.  
+For example, the processnoise is 1d, if you choose `optimizationChoice` to be `processNoise` then the lower and upper bound should be just 1 dimension; if you choose `optimizationChoice` to be `all` then the lower and upper bound should be just 2 dimension.  
+`CPUcoreNumber` decides how many threads you wan to run parallely, which you can choose according to the core number of your computer.
