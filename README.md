@@ -1,18 +1,16 @@
-# ekf_bayesopt
-Kalman Filter tuning using Bayesian Optimization
-If you meet any problems on installing or running the code please let me know!
+# kf_bayesopt
+Kalman Filter tuning example using Bayesian Optimization
 ## Introduction
-This package is written based on Prof.Nisar's matlab code for skyCrane machine and Prof.Simon's KF code.
-This package will run bayesian opimization to optimize skyCrane's process noise or measurement or all of them.
-EKF is implemented and the cost to bayesian optimization is J_NEES or J_NIS.
+This package simulates 1D robot with linear kinematics model as decribed in our paper `<Weak in the NEES?: Auto-tuning Kalman Filters
+with Bayesian Optimization>`
 
-This system is also build on ROS so you also need install ROS. With the help of ROS, bayesian optimization lib and skyCrane lib can communicate with each other more easily. At the same time, all the parameters of bayesian optimization and skyCrane can be modified in the yaml file.
+This system is also build on ROS so you also need install ROS. With the help of ROS, bayesian optimization lib and robot1d lib can communicate with each other more easily. At the same time, all the parameters of bayesian optimization and robot1d can be modified in the yaml file.
 The main structure can be seen from the following figure
-![image](https://github.com/arpg/ekf_bayesopt/raw/master/Nodes.png)
-skyCrane_EKF node will run simulator and estimator(EKF) accodring to different noise setting. It will output J_NEES or J_NIS(topic "cost") and publish to the skyCrane_bayesopt node. Acoording to the cost, skyCrane_bayesopt will run the bayesian optimization to optimize the cost, then it will generate the noise(topic "noise") to publish to the skyCrane_EKF and set the nosie. Then skyCrane_EKF nose can run the simulator and estimator agian and generate new cost.
-To modify the parameters, please go to the `bayesopt_ros/config`. There are two yaml files `bayesParams.yaml` to modify the parameters of bayesopt and `vehicleParams` to modify the parameters of skyCrane. 
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/Nodes.png)
+robot1d_KF node will run simulator and estimator(KF) accodring to different noise setting. It will output J_NEES or J_NIS(topic "cost") and publish to the robot1d_bayesopt node. Acoording to the cost, robot1d_bayesopt will run the bayesian optimization to optimize the cost, then it will generate the noise(topic "noise") to publish to the robot1d_KF and set the nosie. Then robot1d_KF node can run the simulator and estimator agian and generate new cost.
+To modify the parameters, please go to the `config`. There are two yaml files `bayesParams.yaml` to modify the parameters of bayesopt and `vehicleParams` to modify the parameters of robot1d.
 
-## Install
+## Dependencies
 ### Install bayesian optimization
 bayesian optimization is from its official lib.
 ```
@@ -27,48 +25,48 @@ sudo make install
 ```
 Deatails can be seen at https://rmcantin.bitbucket.io/html/install.html
 
-### Install ROS
-recomment ROS kinetic version, please see http://wiki.ros.org/kinetic/Installation/Ubuntu 
-### Install Eigen3
-https://launchpad.net/ubuntu/+source/eigen3
+If you want to see the real-time surrogate function and acquisition function model, you can download my version (just add some plot API)
+```
+To be added
+```
+
+### ROS kinect or melodic
+### Eigen3
 ### Install the bayesopt_ros package
-```
-git clone git://github.com/headmyshoulder/odeint-v2
-```
-This is ode integration lib using C++. Ode45 is used in matlab code, this lib can work the same as it. Just download it, you don't need build it. Details can be seen http://headmyshoulder.github.io/odeint-v2/index.html  
-
-Delete the old ekf_bayesopt folder first. You should have already done it at the `Install bayesian optimization` part
 
 ```
-git clone --single-branch -b master https://github.com/arpg/ekf_bayesopt.git
-cp ekf_bayesopt/bayesopt_ros ~/catkin_ws/src
-cd ~/catkin_ws
+mkdir -p catkin_ws/src
+cd catkin_ws
+catkin_make
+cd src
+git clone --single-branch -b master https://github.com/arpg/kf_bayesopt.git
+cd ..
 catkin_make
 ```
 ## Run the code
-**Run bayesian optimization for skyCrane problem** <br/>
+**Run bayesian optimization for robot1d problem** <br/>
 open one terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch skycrane_bayesopt skyCrane_EKF.launch 
+roslaunch robot_kf_bayesopt robot1d_kf.launch 
 ```
 open another terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch skycrane_bayesopt skyCrane_bayesopt.launch 
+roslaunch robot_kf_bayesopt robot1d_bayesopt.launch
 ```
-In 1D or 2D case, if you want to visualize the process, open another terminal
+In 1D or 2D case, if you download the bayesopt from my github, you can visualize the process in real time, open another terminal
 
 ```
 source ~/catkin_ws/devel/setup.bash
-rosrun skycrane_bayesopt plotSurrogateAcquisition.py
+rosrun robot_kf_bayesopt plot_surrogate_acquisition.py
 ```
-1D in fact means we search the 3D process noise diagonally. You need first modify some parameters in the yaml file.<br/>
-in `config/vehicleParams.yaml`, you need change `optimizationChoice` value to `processNoise1D`. Then in `bayesParams` you need change `opt_dim` value to 1, `lower bound` and `upper cound` has to be 1 dimensional also.<br/>
-1D case we'll optimize the first two elements of process noise.<br/>
-All the process is similar to 1D case, for example, change `optimizationChoice` value to `processNoise2D`
-
-
+For 1D optimization, you'll see something like this
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/1d_opt_example.png).
+In the example image, the upper one is surrogate model with mean, 95% upper bound, 95% lower bound and sample points. The lower one is acquisition function. you can see the legend to know the detail.  
+For 2D optimization, you'll see something like this 
+![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/2d_opt_example.png).
+In this example image, you'll see 2d surrogate model and 2d acquisition function. No upper and lower bound is shown because the bound will cover the mean so I decide not adding them.
 **Test program** <br/>
 1:test controller and check the state output
 open one terminal 
