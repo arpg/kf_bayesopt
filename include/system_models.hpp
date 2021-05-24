@@ -140,7 +140,7 @@ public:
     //original
     h_(0, 0) = 1;
     h_(0, 1) = 0;
-    r_(0, 0) = param_vehicle.onoise_[0];//param_vehicle.onoise_[0]
+    r_(0, 0) = param_vehicle.onoise_[0]/param_vehicle.dt_;//param_vehicle.onoise_[0]
     
     if (sample_observation_noise_ == true)
       {

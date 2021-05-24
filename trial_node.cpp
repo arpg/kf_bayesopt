@@ -67,12 +67,19 @@ public:
                 th[i].join();
 
             
-            if(rv.cost_choice_ == "JNEES"){
+            if(rv.cost_choice_ == "JNEES" || rv.cost_choice_ == "CNEES"){
                 double average_nees = 0.0;
+                double average_var_nees = 0.0;
                 for(int i = 0; i<rv_gt.cpu_core_number_; i++){
                     average_nees += t[i].get_average_nees()/rv_gt.cpu_core_number_;
+                    average_var_nees += t[i].get_average_var_nees()/rv_gt.cpu_core_number_;
                 }
-                J_NEES  = std::abs(log(average_nees/rv.observation_dof_));
+                double tmp_J_NEES  = std::abs(log(average_nees/rv.state_dof_));
+                double tmp_NEES_var = std::abs(log(0.5*average_var_nees/rv.state_dof_));
+                double J_NEES = tmp_J_NEES;
+                if(rv.cost_choice_ == "CNEES"){
+                    J_NEES += tmp_NEES_var;
+                }
                 pic_max[k] = J_NEES;
                 std::cout<<"cost JNEES "<<J_NEES<<std::endl;
             }
@@ -94,10 +101,14 @@ public:
                 std::cout<<"variance log value is "<<tmp_NIS_var<<std::endl;
             }
 
-            rv.dt_ = 0.5;
-            rv_gt.dt_ = 0.5;
-            rv.t_end_ = 105.5;
-            rv_gt.t_end_ = 105.5;
+            rv.dt_ = 1.0;
+            rv_gt.dt_ = 1.0;
+            rv.t_end_ = 201;
+            rv_gt.t_end_ = 201;
+            // rv.dt_ = 0.5;
+            // rv_gt.dt_ = 0.5;
+            // rv.t_end_ = 105.5;
+            // rv_gt.t_end_ = 105.5;
             rv.max_iterations_ = (rv.t_end_- rv.t_start_)/rv.dt_;
             rv_gt.max_iterations_ = (rv_gt.t_end_ - rv_gt.t_start_)/rv_gt.dt_;
         }

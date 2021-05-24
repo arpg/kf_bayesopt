@@ -16,7 +16,7 @@ force_jump: 10 #If bayesopt stucks at one point for "force_jump" times, we'll fo
 epsilon: 0.2 #not really used yet, see the first page
 
 lower_bound: [0.1, 0.01] #default for 3d process noise[0.000001, 0.000001, 0.000001] #lower bound, first one will be input as lowerbound(0), the second lowerbound(1).... dimension needs equal to opt_dim apparently
-upper_bound: [5.0, 1.5]  #[1.0, 1.0, 1.0]
+upper_bound: [5.0, 1.0]  #[1.0, 1.0, 1.0]
 
 #kernel parameters
 kernel_theta: 1.0 #for kernel theta and kernel sigma. See <Gaussian Process for Machine learning> chapter2.3
