@@ -46,6 +46,8 @@ public:
 
     double evaluateSample(const vectord& xin)
     {
+      if(!ros::ok())
+        exit(0);
       cost_ = -1;
       it_counter_++;
       std_msgs::Float64MultiArray noise_msgs;
@@ -102,9 +104,11 @@ public:
       Here I add one more condition, when cost is -1 we continue check if there is callback function, the callback function
       can change the cost so that we can jump out from the will loop. This can make us not lost one call back function 
       when the cost function is too long.*/
-      while(cost_ == -1){
+      while(cost_ == -1 && ros::ok()){
         ros::spinOnce();
       }
+      if(cost_< min_cost_)
+        min_cost_ = cost_;
       return cost_;
     };
 
@@ -116,6 +120,7 @@ public:
     bool checkReachability(const vectord &query)
     {return true;}
 
+    /*This function is for bayesopt plot, work with `rosrun robot_kf_bayesopt plot_surrogate_acquisition.py`*/
     void get_pub_sg_ac_data(){
     std_msgs::Float64MultiArray sg_ac_msgs;
     sg_ac_msgs.layout.dim.push_back(std_msgs::MultiArrayDimension());//to assign that layout has two dimensions
@@ -143,7 +148,7 @@ public:
       sg_ac_msgs.data.insert(sg_ac_msgs.data.end(), sampleX.begin(), sampleX.end());
       sg_ac_msgs.data.insert(sg_ac_msgs.data.end(), sampleY.begin(), sampleY.end());
 
-      //There is a very strange phenomenon. After the last iteration I publish the data, the matplot figure wondow will
+      //There is a very strange phenomenon. After the last iteration I publish the data, the matplot figure window will
       //freeze(no response). I think it is because ros spin. Loop is in ros spin so I cannot do anything operating the figure. 
       //The way I solve this is by passing a last iteration symbol to
       //python code and tell it this is the last iteration(dim[2] == 1). Then you can see in the python code
@@ -166,12 +171,10 @@ public:
       std::vector<double> sampleX = getSampleX(); //points that are really sampled(run the cost function and get the cost)
       std::vector<double> sampleY = getSampleY();
 
-      //std::cout<<"xx size "<<xx.size()<<std::endl;
       if(xx.size() != 0){
         sg_ac_msgs.layout.dim.push_back(std_msgs::MultiArrayDimension());//to assign that layout has two dimensions
         sg_ac_msgs.layout.dim[1].size = xx.size()/2;
         sg_ac_msgs.layout.dim[1].label = "size";
-        //std::cout<<"the size of sampled X is "<<xx.size()<<std::endl;
 
         sg_ac_msgs.data.insert(sg_ac_msgs.data.end(),  xx.begin(),      xx.begin()+xx.size()/2);//in fact we just need one row of x becasue the coordinate is x square
 
@@ -205,7 +208,8 @@ public:
       }
     }
   } 
-
+  
+  double min_cost_ = 9999999;
 private:
     ros::NodeHandle nh_;
     ros::Publisher pub_noise_;
@@ -258,6 +262,12 @@ int main(int nargs, char *args[])
   sc.setBoundingBox(lower_bound,upper_bound); 
 
   sc.optimize(result);
+
+  std::cout<<"final optimization result ";
+  for(auto r:result)
+    std::cout<<r<<",";
+  std::cout<<std::endl;
+  std::ofstream ofs;
  
 return 0;
 }

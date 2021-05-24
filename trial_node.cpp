@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include "read_para_bayes.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ public:
         nh_ = nh;
         pub_cost_ =  nh.advertise<std_msgs::Float64>("cost",10);
         pub_state_his_ =  nh.advertise<std_msgs::Float64MultiArray>("stateHis",10);
+        rb_ = ReadParaBayes(nh_);
     }
     void ProcessNoiseCallback(const std_msgs::Float64MultiArray::ConstPtr& msg){
         std::cout<<"get the noise....................."<<std::endl;
@@ -45,7 +47,7 @@ public:
         std_msgs::Float64 cost;
 
         int it_num = 2;
-        std::vector<double> pic_max(2,0.0);
+        std::vector<double> pic_max(it_num,0.0);
         
         for(int k = 0; k<it_num; k++){
             //create thread and object array
@@ -71,32 +73,45 @@ public:
                     average_nees += t[i].get_average_nees()/rv_gt.cpu_core_number_;
                 }
                 J_NEES  = std::abs(log(average_nees/rv.observation_dof_));
-                //cost.data = J_NEES;
                 pic_max[k] = J_NEES;
                 std::cout<<"cost JNEES "<<J_NEES<<std::endl;
             }
-            else if(rv.cost_choice_ == "JNIS"){
+            else if(rv.cost_choice_ == "JNIS" || rv.cost_choice_ == "CNIS"){
                 double average_nis = 0.0;
+                double average_var_nis = 0.0;
                 for(int i = 0; i<rv_gt.cpu_core_number_; i++){
                     average_nis += t[i].get_average_nis()/rv_gt.cpu_core_number_;
+                    average_var_nis += t[i].get_average_var_nis()/rv_gt.cpu_core_number_;
                 }
-                J_NIS  = std::abs(log(average_nis/rv.observation_dof_));
+                double tmp_J_NIS = std::abs(log(average_nis/rv.observation_dof_));
+                double tmp_NIS_var = std::abs(log(0.5*average_var_nis/rv.observation_dof_));
+                double J_NIS = tmp_J_NIS;
+                if(rv.cost_choice_ == "CNIS")
+                    J_NIS += tmp_NIS_var;
 
                 pic_max[k] = J_NIS;
                 std::cout<<"cost JNIS "<<J_NIS<<std::endl;
+                std::cout<<"variance log value is "<<tmp_NIS_var<<std::endl;
             }
 
-
-            rv.dt_ = 1.0;
-            rv_gt.dt_ = 1.0;
-            rv.t_end_ = 201.0;
-            rv_gt.t_end_ = 201.0;
+            rv.dt_ = 0.5;
+            rv_gt.dt_ = 0.5;
+            rv.t_end_ = 105.5;
+            rv_gt.t_end_ = 105.5;
             rv.max_iterations_ = (rv.t_end_- rv.t_start_)/rv.dt_;
             rv_gt.max_iterations_ = (rv_gt.t_end_ - rv_gt.t_start_)/rv_gt.dt_;
         }
 
         std::cout<<pic_max[0]<<","<<pic_max[1]<<std::endl;
         double max_cost = *max_element(pic_max.begin(), pic_max.end());
+        int index_max = max_element(pic_max.begin(), pic_max.end()) - pic_max.begin();
+
+        it_count_++;
+        if(it_count_> rb_.n_init_samples_){
+            (index_max==1)?(dt1_count_++):(dt0_count_++);
+            std::cout<<"it count "<<it_count_-rb_.n_init_samples_<<","<<dt0_count_<<","<<dt1_count_<<std::endl;
+            std::cout<<"freq of index0 and index1 "<<(float)dt0_count_/(float)(it_count_-rb_.n_init_samples_)<<","<<(float)dt1_count_/(float)(it_count_-rb_.n_init_samples_)<<std::endl;
+        }
         cost.data = max_cost;
 
         pub_cost_.publish(cost);
@@ -110,6 +125,8 @@ private:
     ros::Publisher pub_cost_;
     ros::Publisher pub_state_his_;
     ros::Subscriber sub_noise_;
+    int it_count_ = 0, dt0_count_ = 0, dt1_count_ = 0;
+    ReadParaBayes rb_;
 };
 
 int main(int nargs, char *args[])

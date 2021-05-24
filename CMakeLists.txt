@@ -149,17 +149,18 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/robot_kf_bayesopt_node.cpp)
-add_executable(robot1d_kf trial_node.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
+add_executable(robot1d_kf trial_node.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp read_para_bayes.cpp)
 target_include_directories(robot1d_kf PRIVATE ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(robot1d_kf ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
+
+add_executable(robot1d_bayesopt robot1d_bayesopt.cpp read_para_bayes.cpp read_para_vehicle.cpp)
+target_include_directories(robot1d_bayesopt PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(robot1d_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} Eigen3::Eigen ${PYTHON_LIBRARIES})
 
 add_executable(test_trial src/test_trial.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
 target_include_directories(test_trial PRIVATE ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(test_trial ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
 
-add_executable(robot1d_bayesopt robot1d_bayesopt.cpp read_para_bayes.cpp read_para_vehicle.cpp)
-target_include_directories(robot1d_bayesopt PRIVATE ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(robot1d_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} Eigen3::Eigen ${PYTHON_LIBRARIES})
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

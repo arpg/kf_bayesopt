@@ -23,6 +23,8 @@ void continuousToDiscrete(MatrixType& Fd, MatrixType& Qd,
 
   // bigB = expm(bigA)
   bigB = bigA.exp();
+
+  //std::cout<<"big B \n"<<bigB<<std::endl;
   
   // Extract the discrete time components
   Fd = bigB.template bottomRightCorner<NX,NX>().transpose();

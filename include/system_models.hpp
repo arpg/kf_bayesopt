@@ -9,14 +9,14 @@
 #include <chrono>
 
 #define N 2
-#define Me 1
+#define Me 1 //1 before
 
 typedef Eigen::Matrix<double, N, 1> State;
 typedef Eigen::Matrix<double, N, N> StateCovariance;
 typedef Eigen::Matrix<double, N, N> ProcessNoiseCovariance;
 typedef Eigen::Matrix<double, N, N> JacobianProcess;
 
-typedef Eigen::Matrix<double, Me, Me> Observation;
+typedef Eigen::Matrix<double, Me, 1> Observation;
 typedef Eigen::Matrix<double, Me, Me> ObservationNoiseCovariance;
 typedef Eigen::Matrix<double, Me, N> JacobianObservation;
 
@@ -34,30 +34,45 @@ public:
     
     fc = Eigen::Matrix2d::Zero();
     
-    fc(0, 1) = 1;
+    fc(0, 1) = 1.0;//17.32;//when use 17.32, q(0,0) will be 3.3*10^-4 * 17.32^2 = 0.1, equal to qd(1,1)
+
     qc(1, 1) = param_vehicle.pnoise_[0];
-    
-    g_(0,0)   = 0.5 * param_vehicle.dt_ * param_vehicle.dt_; //0.005;//just for test dt =0.1
-    g_(1,0)   = param_vehicle.dt_;
+    // qc(0, 0) = param_vehicle.pnoise_[0];
+    // qc(0, 1) = param_vehicle.pnoise_[0];
+    // qc(1, 0) = param_vehicle.pnoise_[0];
+
+    //std::cout<<"qc is "<<qc<<std::endl;
+
+    g_(0,0)   = 0.5 * param_vehicle.dt_ * param_vehicle.dt_;//0.5 * param_vehicle.dt_ * param_vehicle.dt_;
+    g_(1,0)   = param_vehicle.dt_;//param_vehicle.dt_;
       
     double j = 0; 
 
     for(int i = 0;i<2000;i++)
       {
-        u_.push_back(2*cos(0.75*j));
+        u_.push_back(2*cos(0.75*j));//originally use 2*cos(0.75*j)
         j += param_vehicle.dt_; 
         //if(i<10) {std::cout<<"j is "<<j<<std::endl;std::cout<<"u is "<<u[i]<<std::endl;}
       }
     //
     continuousToDiscrete(fd_, qd_, fc, qc, param_vehicle.dt_);
 
-    //std::cout<<"_Qd is \n"<<_Qd<<std::endl;
-    //std::cout<<"_Fd is \n"<<_Fd<<std::endl;
+    // if(sample_process_noise == false){
+    //   std::cout<<"estimator"<<std::endl;
+    //   std::cout<<"_Qd is \n"<<qd_<<std::endl;
+    //   std::cout<<"_Fd is \n"<<fd_<<std::endl;
+    //   ros::shutdown();
+    //   exit(0);
+    // }else{
+    //   std::cout<<"simulator"<<std::endl;
+    //   std::cout<<"_Qd is \n"<<qd_<<std::endl;
+    //   std::cout<<"_Fd is \n"<<fd_<<std::endl;
+    // }
 
     if (sample_process_noise == true)
       {
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-        noise_sampler_ = Eigen::EigenMultivariateNormal<double>(State::Zero(),qd_,false,seed);
+        noise_sampler_ = Eigen::EigenMultivariateNormal<double>(State::Zero(),qd_,false,seed);//qd_
       }
    //std::cout<<"_Qd is \n"<<_Qd<<std::endl;
   }
@@ -122,9 +137,10 @@ public:
   ObservationModel(ReadParaVehicle& param_vehicle, bool sample_observation_noise = false)
   {
     sample_observation_noise_ = sample_observation_noise;
+    //original
     h_(0, 0) = 1;
     h_(0, 1) = 0;
-    r_(0, 0) = param_vehicle.onoise_[0];
+    r_(0, 0) = param_vehicle.onoise_[0];//param_vehicle.onoise_[0]
     
     if (sample_observation_noise_ == true)
       {

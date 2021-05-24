@@ -21,6 +21,16 @@ public:
   {
     return average_nis_;
   }
+
+  double get_average_var_nees() const
+  {
+    return average_var_nees_;
+  }
+
+  double get_average_var_nis() const
+  {
+    return average_var_nis_;
+  }
   
   double det_p_ = 0;
   double det_s_ = 0;
@@ -32,9 +42,11 @@ private:
   // Estimator which does the magic
   KalmanFilter estimator_;
 
-  // Average NEES value
+  // Average and variance NEES value
   double average_nees_;
   double average_nis_;
+  double average_var_nees_;
+  double average_var_nis_;
 
   double all_nees_ = 0 ;
   double row_nees_ = 0 ;

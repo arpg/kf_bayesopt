@@ -2,7 +2,7 @@ CPUcoreNumber: 10
 
 #state and observation
 stateDOF: 2
-observationDOF: 1
+observationDOF: 1 #2
 
 #time
 t_start: 0.0 #start of the simulation time
@@ -16,9 +16,10 @@ xidot0: 0.0
 Nsimruns: 200
 
 pnoise: [1.0]
-onoise: [1.0]
+onoise: [0.1]
 
 #optimize "processNoise" or "observationNoise" , "all"
 optimizationChoice: all
 
+#JNIS or JNESS or CNIS
 costChoice: JNIS

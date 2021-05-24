@@ -3,11 +3,11 @@
 #  Please check the page if you want to know the parameters in detial, here I just list most important information of them.
 
 #surrogate model. check https://rmcantin.bitbucket.io/html/bopttheory.html#surrmod for the choice surrogate model, kernel and acquisition function
-surr_name: sStudentTProcessNIG #sStudentTProcessNIG sGaussianProcess
-kernel_name: kMaternARD5 
+surr_name: sGaussianProcess #sStudentTProcessNIG sGaussianProcess
+kernel_name: kMaternARD3 #normally use kMaternARD5
 crit_name: cEI
 
-n_init_samples: 30 #initial sample numbers
+n_init_samples: 20 #initial sample numbers
 n_iterations: 100 #total iterations that need to be done
 random_seed: -1 #random_seed. if it is smaller than 0, we choose random initial guess(time based). if it is equal or bigger than -1, we use fixed initial guess
 verbose_level: 1 #control the output information. For instancem, if it is negative, we 'll output error, if it is 0, we'll output warning and error....
@@ -15,11 +15,11 @@ noise: 0.00000001 #1e-7 seems it does't accept this way. Noise of gaussian or st
 force_jump: 10 #If bayesopt stucks at one point for "force_jump" times, we'll force it sample another points.
 epsilon: 0.2 #not really used yet, see the first page
 
-lower_bound: [0.1,0.1] #default for 3d process noise[0.000001, 0.000001, 0.000001] #lower bound, first one will be input as lowerbound(0), the second lowerbound(1).... dimension needs equal to opt_dim apparently
-upper_bound: [8.0,8.0]  #[1.0, 1.0, 1.0]
+lower_bound: [0.1, 0.01] #default for 3d process noise[0.000001, 0.000001, 0.000001] #lower bound, first one will be input as lowerbound(0), the second lowerbound(1).... dimension needs equal to opt_dim apparently
+upper_bound: [5.0, 1.5]  #[1.0, 1.0, 1.0]
 
 #kernel parameters
-kernel_theta: 1.0 #for kernel theta and kernel sigma. See<Gaussian Process for Machine learning> chapter2.3
+kernel_theta: 1.0 #for kernel theta and kernel sigma. See <Gaussian Process for Machine learning> chapter2.3
 kernel_sigma: 10.0 #kernel theta is the l in chapter 2.3  
 mean_name: mConst #mean of kernel, recommend to keep it as this
 mean_mu: 1.0 #if set mean as constant, then mean == 1 or 0 is widely used. Thereotically constant mean won't influence the result
@@ -28,8 +28,8 @@ prior_alpha: 1.0 #never used before
 prior_beta: 1.0
 sigma: 1.0
 
-n_iteration_relearn: 50 #never modified before
-n_inner_evaluation: 500 #never modified before
+n_iteration_relearn: 10 #Number of iterations between re-learning kernel parameters
+n_inner_evaluation: 500 #Maximum number of iterations (per dimension!) to optimize the acquisition function (criteria)
 
 #keep the following as it is
 log_filename: bayesopt.log

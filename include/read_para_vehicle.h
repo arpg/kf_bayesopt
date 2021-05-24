@@ -43,5 +43,8 @@ class ReadParaVehicle{
       /*optimization choice and cost choice*/
       std::string optimization_choice_; //optimize "processNoise" or "observationNoise" or "both"
       std::string cost_choice_;
+
+      /*tmp*/
+      double tmpf = 17.32;
 };
 

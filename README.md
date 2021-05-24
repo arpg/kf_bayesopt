@@ -17,6 +17,7 @@ with Bayesian Optimization>`
 This system is also build on ROS so you also need install ROS. With the help of ROS, bayesian optimization lib and robot1d lib can communicate with each other more easily. At the same time, all the parameters of bayesian optimization and robot1d can be modified in the yaml file.
 The main structure can be seen from the following figure
 ![image](https://github.com/arpg/ekf_bayesopt/raw/master/plot_example/Nodes.png)
+
 robot1d_KF node will run simulator and estimator(KF) accodring to different noise setting. It will output J_NEES or J_NIS(topic "cost") and publish to the robot1d_bayesopt node. Acoording to the cost, robot1d_bayesopt will run the bayesian optimization to optimize the cost, then it will generate the noise(topic "noise") to publish to the robot1d_KF and set the nosie. Then robot1d_KF node can run the simulator and estimator agian and generate new cost.
 To modify the parameters, please go to the `config`. There are two yaml files `bayesParams.yaml` to modify the parameters of bayesopt and `vehicleParams` to modify the parameters of robot1d.
 
@@ -84,4 +85,4 @@ For example, the processnoise is 1d, if you choose `optimizationChoice` to be `p
 `CPUcoreNumber` decides how many threads you wan to run parallely, which you can choose according to the core number of your computer.
 
 ## Some tricks
-We found that the sometimes the bayesopt cannot find the global minimum because the local minimum points's JNIS is so close to the global one or even smaller because of the noise. To solve this, we found the local minimum found by `0.1` dt setting doesn't work for some other dt like `1` so in the `trail_node.cpp` you can see we add also both use `dt=1` and `dt=0.1` to run the cost function and git JNIS/JNEES and simply pick the larger cost. Only the global minimum work for all dt.  
+We found that the sometimes the bayesopt cannot find the global minimum because the local minimum points's JNIS is so close to the global one or even smaller because of the noise. To solve this, we found the local minimum found by `0.1` dt setting doesn't work for some other dt like `1` so in the `trail_node.cpp` you can see we add also both use `dt=0.4, 0.5, 0.6...1` and `dt=0.1` to run the cost function and git JNIS/JNEES and simply pick the larger cost. Only the global minimum work for all dt.  
