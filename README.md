@@ -9,7 +9,15 @@ Kalman Filter tuning example using Bayesian Optimization. If you use the relates
   year={2018},
   organization={IEEE}
 }
+
+@article{chen2021time,
+  title={Time Dependence in Kalman Filter Tuning},
+  author={Chen, Zhaozhong and Heckman, Christoffer and Julier, Simon and Ahmed, Nisar},
+  journal={arXiv preprint arXiv:2108.10712},
+  year={2021}
+}
 ```
+Fusion 2021 has accepted the second reference.
 ## Introduction
 This package simulates 1D robot with linear kinematics model as decribed in our paper `<Weak in the NEES?: Auto-tuning Kalman Filters
 with Bayesian Optimization>`
@@ -84,5 +92,5 @@ One thing you need to notice is that the `upper bound` and `lower bound`'s dimen
 For example, the processnoise is 1d, if you choose `optimizationChoice` to be `processNoise` then the lower and upper bound should be just 1 dimension; if you choose `optimizationChoice` to be `all` then the lower and upper bound should be just 2 dimension.  
 `CPUcoreNumber` decides how many threads you wan to run parallely, which you can choose according to the core number of your computer.
 
-## Some tricks
-We found that the sometimes the bayesopt cannot find the global minimum because the local minimum points's JNIS is so close to the global one or even smaller because of the noise. To solve this, we found the local minimum found by `0.1` dt setting doesn't work for some other dt like `1` so in the `trail_node.cpp` you can see we add also both use `dt=0.4, 0.5, 0.6...1` and `dt=0.1` to run the cost function and git JNIS/JNEES and simply pick the larger cost. Only the global minimum work for all dt.  
+## Two sample time approaches
+We found the cost function is ambiguous and has observability problems. The sample time is a key component in our solution to relieve the problem. For each set of noise parameters, we run the Kalman filter twice with two different sample time (no strict requirement as long as the two sample time are different enough. For example `0.1` and `0.5`). We pick the larger cost and feed it into the optimization. The reason of this solution can be seen in our second reference `chen2021time`.

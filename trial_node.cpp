@@ -101,6 +101,7 @@ public:
                 std::cout<<"variance log value is "<<tmp_NIS_var<<std::endl;
             }
 
+            //both choices should work
             rv.dt_ = 1.0;
             rv_gt.dt_ = 1.0;
             rv.t_end_ = 201;
