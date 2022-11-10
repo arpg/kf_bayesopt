@@ -53,6 +53,16 @@ ReadParaVehicle::ReadParaVehicle(ros::NodeHandle nh, bool showReadInfo){
         else
             ROS_INFO("No parameters xidot0");
 
+        if (nh.getParam("y0", y0_))
+            ROS_INFO("y0: %f", y0_);
+        else
+            ROS_INFO("No parameters xi0");
+
+        if (nh.getParam("ydot0", ydot0_))
+            ROS_INFO("ydot0: %f", ydot0_);
+        else
+            ROS_INFO("No parameters xidot0");
+
         if (nh.getParam("disturbance", disturbance_)){
             if(disturbance_.size() != state_dof_){
                 ROS_INFO("disturbance size must equal to stateDOF");
@@ -132,6 +142,8 @@ ReadParaVehicle::ReadParaVehicle(ros::NodeHandle nh, bool showReadInfo){
         /*initial state*/
         nh.getParam("xi0", xi0_);
         nh.getParam("xidot0", xidot0_);
+        nh.getParam("y0", y0_);
+        nh.getParam("ydot0", ydot0_);
         nh.getParam("P0", P0_);
         nh.getParam("disturbance", disturbance_);
 

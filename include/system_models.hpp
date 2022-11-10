@@ -8,8 +8,8 @@
 #include "read_para_vehicle.h"
 #include <chrono>
 
-#define N 2
-#define Me 1 //1 before
+#define N 4
+#define Me 2
 
 typedef Eigen::Matrix<double, N, 1> State;
 typedef Eigen::Matrix<double, N, N> StateCovariance;
@@ -30,21 +30,24 @@ public:
   ProcessModel(ReadParaVehicle& param_vehicle, bool sample_process_noise = false)
   {
     sample_process_noise_ = sample_process_noise;
-    Eigen::Matrix2d fc, qc;
+    Eigen::Matrix4d fc, qc;
     
-    fc = Eigen::Matrix2d::Zero();
+    fc = Eigen::Matrix4d::Zero();
     
-    fc(0, 1) = 1.0;//17.32;//when use 17.32, q(0,0) will be 3.3*10^-4 * 17.32^2 = 0.1, equal to qd(1,1)
+    fc(0, 2) = 1.0;//17.32;//when use 17.32, q(0,0) will be 3.3*10^-4 * 17.32^2 = 0.1, equal to qd(1,1)
+    fc(1, 3) = 1.0;
 
-    qc(1, 1) = param_vehicle.pnoise_[0];
-    // qc(0, 0) = param_vehicle.pnoise_[0];
+    qc(2, 2) = param_vehicle.pnoise_[0];
+    qc(3, 3) = param_vehicle.pnoise_[1];
     // qc(0, 1) = param_vehicle.pnoise_[0];
     // qc(1, 0) = param_vehicle.pnoise_[0];
 
     //std::cout<<"qc is "<<qc<<std::endl;
 
-    g_(0,0)   = 0.5 * param_vehicle.dt_ * param_vehicle.dt_;//0.5 * param_vehicle.dt_ * param_vehicle.dt_;
-    g_(1,0)   = param_vehicle.dt_;//param_vehicle.dt_;
+    g_(0,0)   = 0.5 * param_vehicle.dt_ * param_vehicle.dt_;
+    g_(1,0)   = 0.5 * param_vehicle.dt_ * param_vehicle.dt_;
+    g_(2,0)   = param_vehicle.dt_;
+    g_(3,0)   = param_vehicle.dt_;
       
     double j = 0; 
 
@@ -71,7 +74,9 @@ public:
 
     if (sample_process_noise == true)
       {
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        srand (time(NULL));
+        unsigned seed = rand();
+        //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         noise_sampler_ = Eigen::EigenMultivariateNormal<double>(State::Zero(),qd_,false,seed);//qd_
       }
    //std::cout<<"_Qd is \n"<<_Qd<<std::endl;
@@ -118,9 +123,9 @@ public:
 
 private:
 
-  Eigen::Matrix2d fd_;
-  Eigen::Matrix2d qd_;
-  Eigen::Matrix<double,2,1> g_; 
+  Eigen::Matrix4d fd_;
+  Eigen::Matrix4d qd_;
+  Eigen::Matrix<double,4,1> g_; 
   State xpred_;
   std::vector<double> u_;
   std::vector<double> tvec_;
@@ -138,13 +143,22 @@ public:
   {
     sample_observation_noise_ = sample_observation_noise;
     //original
+    h_ = MatrixMN::Zero();
     h_(0, 0) = 1;
-    h_(0, 1) = 0;
-    r_(0, 0) = param_vehicle.onoise_[0]/param_vehicle.dt_;//param_vehicle.onoise_[0]
+    h_(1, 1) = 1;
+    r_(0, 0) = param_vehicle.onoise_[0]/param_vehicle.dt_;
+    r_(1, 1) = param_vehicle.onoise_[1]/param_vehicle.dt_;
+    //2 measurement
+    // h_(0, 0) = 1;
+    // h_(1, 1) = 1;
+    // r_(0, 0) = param_vehicle.onoise_[0]/param_vehicle.dt_;
+    // r_(1, 1) = param_vehicle.onoise_[0]/param_vehicle.dt_;
     
     if (sample_observation_noise_ == true)
       {
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        srand (time(NULL));
+        unsigned seed = rand();
+        //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         noise_sampler_ = Eigen::EigenMultivariateNormal<double>(Observation::Zero(),r_,false,seed);
       }
   }

@@ -11,7 +11,9 @@ KalmanFilter::KalmanFilter(ReadParaVehicle& param_vehicle) :
 
 void KalmanFilter::Initialize(const State& x0, const StateCovariance& P0)
 {
-  xest_ = x0;
+  //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  //auto noise_sampler = Eigen::EigenMultivariateNormal<double>(State::Zero(),P0,false,seed);
+  xest_ = x0;//noise_sampler.samples(1);
   pest_ = P0;
 }
 
@@ -35,4 +37,5 @@ void KalmanFilter::Step(const Observation& z,int count)
   // Update the covariance using the Joseph form; should give some slight numerical stability
   Eigen::MatrixXd Xtmp = MatrixXd::Identity(N,N) - k_gain * observation_model_.get_h(); 
   pest_ = Xtmp*ppred_;
+
 }

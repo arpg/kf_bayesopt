@@ -20,10 +20,11 @@ void Trial::Run()
 
   double all_var_nees = 0, all_var_nis = 0;
 
-  std::vector<double> e1,e2;
-  std::vector<double> ub1,ub2;
-  std::vector<double> lb1,lb2;
+  std::vector<double> e1,e2,e3,e4;
+  std::vector<double> ub1,ub2,ub3,ub4;
+  std::vector<double> lb1,lb2,lb3,lb4;
   std::vector<double> time_step;
+  //std::ofstream wr_error_bound("/home/zhaozhong/Desktop/state_error.csv", std::ofstream::out|std::ofstream::app);
 
   for(int i=0;i<param_vehicle_.nsimruns_/param_vehicle_.cpu_core_number_;i++)
   {
@@ -54,8 +55,21 @@ void Trial::Run()
 
       double chi2_nees = 0, chi2_nis = 0;
 
+      // if(param_vehicle_.cost_choice_ == "JNEES")
+      //     chi2_nees = xerror.transpose()*estimator_.get_pest().inverse()*xerror;
+      // else if(param_vehicle_.cost_choice_ == "JNIS"){   
+      //     auto tmp  = estimator_.get_residual().transpose()*estimator_.get_s().inverse()*estimator_.get_residual();
+      //     chi2_nis = tmp(0);
+      //     //std::cout<<"chi2_nis is "<<chi2_nis<<","<<estimator_.get_s().inverse()<<std::endl;
+      // }
+      // else{
+      //     std::cout<<"not available choice............. "<<std::endl;
+      //     exit(0);
+      // }
+
       /*tmp check the NEES and NIS value at the same time */
       chi2_nees = xerror.transpose()*estimator_.get_pest().inverse()*xerror;
+
       auto tmp  = estimator_.get_residual().transpose()*estimator_.get_s().inverse()*estimator_.get_residual();
       chi2_nis = tmp(0);
 
@@ -65,16 +79,25 @@ void Trial::Run()
       his_nees.push_back(chi2_nees);
       his_nis.push_back(chi2_nis);
 
-      /*if nsumruns == 1, we'll plot the 95% confidence figure*/
       if( param_vehicle_.nsimruns_ == 1){
           time_step.push_back(step*param_vehicle_.dt_);
           e1.push_back(xerror(0,0));
           e2.push_back(xerror(1,0));
+          e3.push_back(xerror(2,0));
+          e4.push_back(xerror(3,0));
           StateCovariance curr_pest = estimator_.get_pest();
           lb1.push_back(-2*sqrt(curr_pest(0,0)));
           lb2.push_back(-2*sqrt(curr_pest(1,1)));
+          lb3.push_back(-2*sqrt(curr_pest(2,2)));
+          lb4.push_back(-2*sqrt(curr_pest(3,3)));
           ub1.push_back(2*sqrt(curr_pest(0,0)));
           ub2.push_back(2*sqrt(curr_pest(1,1)));
+          ub3.push_back(2*sqrt(curr_pest(2,2)));
+          ub4.push_back(2*sqrt(curr_pest(3,3)));
+          
+          //wr_error_bound<<xerror(0,0)<<","<<xerror(1,0)<<","<<xerror(2,0)<<","<<xerror(3,0)<<","<<lb1[step]<<","<<lb2[step]<<","<<lb3[step]<<","<<lb4[step]<<","<<ub1[step]<<","<<ub2[step]<<","<<ub3[step]<<","<<ub4[step]<<std::endl;
+          pos_error_ += sqrt(xerror(0,0)*xerror(0,0) + xerror(1,0)*xerror(1,0));
+          acc_error_ += sqrt(xerror(2,0)*xerror(2,0) + xerror(3,0)*xerror(3,0));
       }
 
     }
@@ -103,7 +126,6 @@ void Trial::Run()
 
     row_nees_ = 0;
     row_nis_  = 0;
-
      
   }
   
@@ -113,18 +135,29 @@ void Trial::Run()
   average_nis_  = all_nis_/k_average_;
 
    /*plot error and 95 percent confidence interval*/
+    //plt::figure_size(1200, 780);
   if( param_vehicle_.nsimruns_ == 1){
-      plt::subplot(2,1,1);
+      plt::subplot(4,1,1);
       plt::plot(time_step,e1);
       plt::plot(time_step,lb1);
       plt::plot(time_step,ub1);
-      plt::ylabel("xi");
+      plt::ylabel("x");
       plt::title("error with 95 percent confidence interval");
-      plt::subplot(2,1,2);
+      plt::subplot(4,1,2);
       plt::plot(time_step,e2);
       plt::plot(time_step,lb2);
       plt::plot(time_step,ub2);
-      plt::ylabel("xidot");
+      plt::ylabel("y");
+      plt::subplot(4,1,3);
+      plt::plot(time_step,e3);
+      plt::plot(time_step,lb3);
+      plt::plot(time_step,ub3);
+      plt::ylabel("xdot");
+      plt::subplot(4,1,4);
+      plt::plot(time_step,e4);
+      plt::plot(time_step,lb4);
+      plt::plot(time_step,ub4);
+      plt::ylabel("ydot");
       plt::show();
   }
   

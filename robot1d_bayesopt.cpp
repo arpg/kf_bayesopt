@@ -85,16 +85,25 @@ public:
       }
 
       //the vector data is always like this, std::vector<double> data = {DataOfprocessNoise,DataOfObservationNoise}
+      std::cout<<"data is ";
+      for(auto d:data){
+        std::cout<<d<<",";
+      }
+      std::cout<<std::endl;
       noise_msgs.data = data;
 
       //maybe ros system cannot response that fast. We need publish one message once or twice then we need sleep for a short time
-      usleep(300000);
+      if(first_run_){
+        usleep(500000);//300000 previously
+        first_run_ = false;
+      }
       pub_noise_.publish(noise_msgs);
 
       std::cout<<"publish the noise........................."<<std::endl;
 
-      usleep(200000);
-      get_pub_sg_ac_data();//this is the data from last iteration
+      /*UNCOMMENT if you want to see the plot online*/
+      //usleep(200000);
+      //get_pub_sg_ac_data();//this is the data from last iteration
 
       /*when a message is published, the corresponding call back function will be stored into a queue.
       when a ros spin is called, it will call the first one in the queue.
@@ -107,6 +116,7 @@ public:
       while(cost_ == -1 && ros::ok()){
         ros::spinOnce();
       }
+
       if(cost_< min_cost_)
         min_cost_ = cost_;
       return cost_;
@@ -120,7 +130,6 @@ public:
     bool checkReachability(const vectord &query)
     {return true;}
 
-    /*This function is for bayesopt plot, work with `rosrun robot_kf_bayesopt plot_surrogate_acquisition.py`*/
     void get_pub_sg_ac_data(){
     std_msgs::Float64MultiArray sg_ac_msgs;
     sg_ac_msgs.layout.dim.push_back(std_msgs::MultiArrayDimension());//to assign that layout has two dimensions
@@ -148,7 +157,7 @@ public:
       sg_ac_msgs.data.insert(sg_ac_msgs.data.end(), sampleX.begin(), sampleX.end());
       sg_ac_msgs.data.insert(sg_ac_msgs.data.end(), sampleY.begin(), sampleY.end());
 
-      //There is a very strange phenomenon. After the last iteration I publish the data, the matplot figure window will
+      //There is a very strange phenomenon. After the last iteration I publish the data, the matplot figure wondow will
       //freeze(no response). I think it is because ros spin. Loop is in ros spin so I cannot do anything operating the figure. 
       //The way I solve this is by passing a last iteration symbol to
       //python code and tell it this is the last iteration(dim[2] == 1). Then you can see in the python code
@@ -171,10 +180,12 @@ public:
       std::vector<double> sampleX = getSampleX(); //points that are really sampled(run the cost function and get the cost)
       std::vector<double> sampleY = getSampleY();
 
+      //std::cout<<"xx size "<<xx.size()<<std::endl;
       if(xx.size() != 0){
         sg_ac_msgs.layout.dim.push_back(std_msgs::MultiArrayDimension());//to assign that layout has two dimensions
         sg_ac_msgs.layout.dim[1].size = xx.size()/2;
         sg_ac_msgs.layout.dim[1].label = "size";
+        //std::cout<<"the size of sampled X is "<<xx.size()<<std::endl;
 
         sg_ac_msgs.data.insert(sg_ac_msgs.data.end(),  xx.begin(),      xx.begin()+xx.size()/2);//in fact we just need one row of x becasue the coordinate is x square
 
@@ -208,8 +219,7 @@ public:
       }
     }
   } 
-  
-  double min_cost_ = 9999999;
+  double min_cost_ = 99999;
 private:
     ros::NodeHandle nh_;
     ros::Publisher pub_noise_;
@@ -220,6 +230,7 @@ private:
     int dim_;//dimention of optimized parameters;
     double cost_;
     int it_counter_ = 0; //iteration number
+    bool first_run_ = true;
 };
 
 int main(int nargs, char *args[])
@@ -247,6 +258,7 @@ int main(int nargs, char *args[])
         par.surr_name = re.surr_name_;
         par.noise = re.noise_;
         par.force_jump = re.force_jump_;
+        par.init_method = 1;//1 for Latin Hypercube Sampling, default, 2 for Sobol Sequence, >2 for uniform sampling. >2 is not good
       }
 
   int opt_dim = re.lower_bound_.size();
@@ -263,11 +275,18 @@ int main(int nargs, char *args[])
 
   sc.optimize(result);
 
+  std::string filename("/home/zhaozhong/Desktop/opt_result.csv");
   std::cout<<"final optimization result ";
   for(auto r:result)
     std::cout<<r<<",";
   std::cout<<std::endl;
+  //std::remove(filename.c_str());
   std::ofstream ofs;
+  ofs.open (filename, std::ofstream::out | std::ofstream::app);
+  //double opt_cost = sc.evaluateSample(result);//the opt cost is random so we cant run the program and get the cost again. It would be different
+  for(auto r:result)
+    ofs<<r<<",";
+  ofs<<sc.min_cost_<<std::endl;
  
 return 0;
 }

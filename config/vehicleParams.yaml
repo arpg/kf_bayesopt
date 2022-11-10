@@ -1,8 +1,8 @@
-CPUcoreNumber: 10
+CPUcoreNumber: 20
 
 #state and observation
-stateDOF: 2
-observationDOF: 1 #2
+stateDOF: 4
+observationDOF: 2
 
 #time
 t_start: 0.0 #start of the simulation time
@@ -11,15 +11,17 @@ dt: 0.1
 
 #initial state
 xi0: 0.0
+y0: 0.0
 xidot0: 0.0
+ydot: 0.0
 
-Nsimruns: 200
+Nsimruns: 120
 
-pnoise: [1.0]
-onoise: [0.1]
+pnoise: [1.0, 2.0]
+onoise: [0.2, 0.1]
 
 #optimize "processNoise" or "observationNoise" , "all"
 optimizationChoice: all
 
-#JNIS or JNESS or CNISor CNEES
-costChoice: JNEES
+#CNEES, JNEES, JNIS or CNIS
+costChoice: JNIS

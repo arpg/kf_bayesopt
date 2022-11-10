@@ -42,7 +42,7 @@ public:
         }
         std::cout<<std::endl;
         
-        std::cout<<"observation noise "<<rv.onoise_[0]<<std::endl;
+        std::cout<<"observation noise "<<rv.onoise_[0]<<","<<rv.onoise_[1]<<std::endl;
 
         std_msgs::Float64 cost;
 
@@ -81,7 +81,7 @@ public:
                     J_NEES += tmp_NEES_var;
                 }
                 pic_max[k] = J_NEES;
-                std::cout<<"cost JNEES "<<J_NEES<<std::endl;
+                std::cout<<"cost "<<rv.cost_choice_<<", "<<J_NEES<<std::endl;
             }
             else if(rv.cost_choice_ == "JNIS" || rv.cost_choice_ == "CNIS"){
                 double average_nis = 0.0;
@@ -92,27 +92,36 @@ public:
                 }
                 double tmp_J_NIS = std::abs(log(average_nis/rv.observation_dof_));
                 double tmp_NIS_var = std::abs(log(0.5*average_var_nis/rv.observation_dof_));
-                double J_NIS = tmp_J_NIS;
+                J_NIS  =  tmp_J_NIS;
                 if(rv.cost_choice_ == "CNIS")
                     J_NIS += tmp_NIS_var;
 
                 pic_max[k] = J_NIS;
-                std::cout<<"cost JNIS "<<J_NIS<<std::endl;
-                std::cout<<"variance log value is "<<tmp_NIS_var<<std::endl;
+                std::cout<<"cost JNIS "<<J_NIS<<", tmp JNIS "<<tmp_J_NIS<<","<<tmp_NIS_var<<std::endl;
+                /* Try to find some non-chi square distribution value. i.e. Mean is close to the DOF while variance is not close to the DOF */
+                if(tmp_J_NIS<0.05 && tmp_NIS_var>0.3){
+                    std::cout<<"cost JNIS "<<tmp_J_NIS<<", non log value is "<<average_nis<<std::endl;
+                    std::cout<<"variance log value is "<<tmp_NIS_var<<", non log value is "<<average_var_nis<<std::endl;
+                }
             }
 
-            //both choices should work
-            rv.dt_ = 1.0;
-            rv_gt.dt_ = 1.0;
-            rv.t_end_ = 201;
-            rv_gt.t_end_ = 201;
-            // rv.dt_ = 0.5;
-            // rv_gt.dt_ = 0.5;
-            // rv.t_end_ = 105.5;
-            // rv_gt.t_end_ = 105.5;
+            
+            rv.dt_ = 0.5;
+            rv_gt.dt_ = 0.5;
+            rv.t_end_ = 105.5;
+            rv_gt.t_end_ = 105.5;
+            
+            // rv.dt_ = 0.1;
+            // rv_gt.dt_ = 0.1;
+            // rv.t_end_ = 20.1;
+            // rv_gt.t_end_ = 20.1;
             rv.max_iterations_ = (rv.t_end_- rv.t_start_)/rv.dt_;
             rv_gt.max_iterations_ = (rv_gt.t_end_ - rv_gt.t_start_)/rv_gt.dt_;
+            //sleep(0.1);
+
         }
+
+
 
         std::cout<<pic_max[0]<<","<<pic_max[1]<<std::endl;
         double max_cost = *max_element(pic_max.begin(), pic_max.end());

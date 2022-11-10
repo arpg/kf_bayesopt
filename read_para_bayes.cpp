@@ -72,7 +72,7 @@ ReadParaBayes::ReadParaBayes(ros::NodeHandle nh){
 
 
     if (nh.getParam("lower_bound", lower_bound_)){
-        ROS_INFO("Got lower bound");
+        ROS_INFO("Got lower bound ");
     }
     else{
         ROS_INFO("no lower bound");
@@ -80,7 +80,7 @@ ReadParaBayes::ReadParaBayes(ros::NodeHandle nh){
 
     if (nh.getParam("upper_bound", upper_bound_)){
         if(upper_bound_.size() != lower_bound_.size()){
-            ROS_FATAL("bounding box size must be agreed!");
+            ROS_FATAL("bounding box size must agree! lower bound size %zu, upper bound size %zu", lower_bound_.size(), upper_bound_.size());
         }
         else{
             ROS_INFO("Got upper bound");

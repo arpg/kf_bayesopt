@@ -34,6 +34,8 @@ public:
   
   double det_p_ = 0;
   double det_s_ = 0;
+  double pos_error_ = 0;
+  double acc_error_ = 0;
 private:
   
   // Simulator which generates the sequence

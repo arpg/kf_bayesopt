@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(robot_kf_bayesopt)
+project(robot2d_kf_bayesopt)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -149,17 +149,25 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/robot_kf_bayesopt_node.cpp)
-add_executable(robot1d_kf trial_node.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp read_para_bayes.cpp)
-target_include_directories(robot1d_kf PRIVATE ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(robot1d_kf ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
+add_executable(robot2d_kf trial_node.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp read_para_bayes.cpp)
+target_include_directories(robot2d_kf PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(robot2d_kf ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
 
-add_executable(robot1d_bayesopt robot1d_bayesopt.cpp read_para_bayes.cpp read_para_vehicle.cpp)
-target_include_directories(robot1d_bayesopt PRIVATE ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(robot1d_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} Eigen3::Eigen ${PYTHON_LIBRARIES})
+add_executable(robot2d_bayesopt robot1d_bayesopt.cpp read_para_bayes.cpp read_para_vehicle.cpp)
+target_include_directories(robot2d_bayesopt PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(robot2d_bayesopt ${catkin_LIBRARIES} /usr/local/lib/libbayesopt.a ${NLOPT} Eigen3::Eigen ${PYTHON_LIBRARIES})
 
-add_executable(test_trial src/test_trial.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
-target_include_directories(test_trial PRIVATE ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(test_trial ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
+add_executable(test_trial2d src/test_trial.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
+target_include_directories(test_trial2d PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(test_trial2d ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
+
+add_executable(test_trial_line src/test_trial_1d_line.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
+target_include_directories(test_trial_line PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(test_trial_line ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
+
+add_executable(test_trial_surface src/test_trial_2d_surface.cpp kalman_filter.cpp simulator.cpp read_para_vehicle.cpp trial.cpp)
+target_include_directories(test_trial_surface PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(test_trial_surface ${catkin_LIBRARIES} ${NLOPT} Eigen3::Eigen ${CMAKE_THREAD_LIBS_INIT} ${PYTHON_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

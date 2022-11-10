@@ -1,0 +1,11 @@
+<launch>
+    <param name="name" value="test_trial2d"/>
+    <rosparam file="$(find robot2d_kf_bayesopt)/config/vehicleParams.yaml" command="load" />
+    <param name="pnoise_est0" type="double" value="1"/>
+    <param name="pnoise_est1" type="double" value="2"/>
+    <param name="onoise_est0" type="double" value="0.2"/>
+    <param name="onoise_est1" type="double" value="0.1"/>
+    <node name="test_trial2d" pkg = "robot2d_kf_bayesopt" type = "test_trial_line" output="screen">
+    </node>
+</launch>
+

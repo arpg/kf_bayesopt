@@ -27,6 +27,8 @@ class ReadParaVehicle{
       /*initial state*/
       double xi0_;
       double xidot0_;
+      double y0_;
+      double ydot0_;
       std::vector<double> disturbance_;
       std::string P0_; //input "identity" or "zero"
 
