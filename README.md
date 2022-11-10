@@ -62,12 +62,12 @@ catkin_make
 open one terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch robot_kf_bayesopt robot1d_kf.launch 
+roslaunch robot_kf_bayesopt robot2d_kf.launch 
 ```
 open another terminal
 ```
 source ~/catkin_ws/devel/setup.bash
-roslaunch robot_kf_bayesopt robot1d_bayesopt.launch
+roslaunch robot_kf_bayesopt robot2d_bayesopt.launch
 ```
 In 1D or 2D case, **if you download the bayesopt from my github**, you can visualize the process in real time, open another terminal
 
